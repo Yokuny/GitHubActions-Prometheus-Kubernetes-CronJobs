@@ -127,12 +127,29 @@ jobs:
           kubectl rollout status deployment/prometheus --timeout=5m
       
       - name: Get deployment status
+        if: always()
         run: |
           echo "=== Deployments ==="
           kubectl get deployments
           echo ""
           echo "=== Pods ==="
-          kubectl get pods
+          kubectl get pods -o wide
           echo ""
           echo "=== Services ==="
           kubectl get services
+          echo ""
+          echo "=== Recent Events ==="
+          kubectl get events --sort-by='.lastTimestamp' | tail -20
+      
+      - name: Debug pod logs on failure
+        if: failure()
+        run: |
+          echo "=== Backend Pod Logs ==="
+          kubectl logs -l app=backend --tail=100 --all-containers=true || echo "No backend logs available"
+          echo ""
+          echo "=== Prometheus Pod Logs ==="
+          kubectl logs -l app=prometheus --tail=100 --all-containers=true || echo "No prometheus logs available"
+          echo ""
+          echo "=== Pod Descriptions ==="
+          kubectl describe pods -l app=backend || echo "No backend pods to describe"
+          kubectl describe pods -l app=prometheus || echo "No prometheus pods to describe"
