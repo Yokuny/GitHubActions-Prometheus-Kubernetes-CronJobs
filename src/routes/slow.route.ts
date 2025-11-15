@@ -1,6 +1,6 @@
-import { type NextFunction, type Request, type Response, Router } from "express";
+import { type NextFunction, type Request, type Response, Router, type IRouter } from "express";
 
-const router = Router();
+const router: IRouter = Router();
 
 /**
  * GET /slow endpoint

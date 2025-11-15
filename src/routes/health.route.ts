@@ -1,6 +1,6 @@
-import { type NextFunction, type Request, type Response, Router } from "express";
+import { type NextFunction, type Request, type Response, Router, type IRouter } from "express";
 
-const router = Router();
+const router: IRouter = Router();
 
 // Store server start time for uptime calculation
 const serverStartTime = Date.now();

@@ -1,4 +1,4 @@
-import express, { type Request, type Response, type NextFunction } from "express";
+import express, { type Application, type Request, type Response, type NextFunction } from "express";
 import { metricsMiddleware } from "./middleware/metrics.middleware.js";
 import fastRoute from "./routes/fast.route.js";
 import healthRoute from "./routes/health.route.js";
@@ -11,7 +11,7 @@ import slowRoute from "./routes/slow.route.js";
  * Registers all route handlers (/fast, /slow, /metrics, /health)
  * Adds global error handler middleware
  */
-export function createApp() {
+export function createApp(): Application {
   const app = express();
 
   // Parse JSON request bodies

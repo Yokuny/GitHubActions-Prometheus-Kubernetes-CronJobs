@@ -1,7 +1,7 @@
-import { type NextFunction, type Request, type Response, Router } from "express";
+import { type NextFunction, type Request, type Response, Router, type IRouter } from "express";
 import { register } from "../config/prometheus.js";
 
-const router = Router();
+const router: IRouter = Router();
 
 /**
  * GET /metrics endpoint

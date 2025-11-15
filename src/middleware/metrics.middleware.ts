@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { Request, Response, RequestHandler } from "express";
 import responseTime from "response-time";
 import { httpRequestDuration, httpRequestsTotal } from "../config/prometheus.js";
 
@@ -7,7 +7,7 @@ import { httpRequestDuration, httpRequestsTotal } from "../config/prometheus.js"
  * Captures request duration and records to histogram with labels (method, route, status_code)
  * Increments counter for each request with appropriate labels
  */
-export const metricsMiddleware = responseTime((req: Request, res: Response, time: number) => {
+export const metricsMiddleware: RequestHandler = responseTime((req: Request, res: Response, time: number) => {
   // Get the route path, fallback to the original URL if route is not available
   const route = req.route?.path || req.path || "unknown";
 
