@@ -15,7 +15,7 @@ spec:
         app: backend
     spec:
       imagePullSecrets:
-      - name: docr-secret
+      - name: registry-github-actions-prometheus-k8s-cronjobs
       containers:
       - name: backend
         image: registry.digitalocean.com/github-actions-prometheus-k8s-cronjobs/backend:latest
