@@ -6,6 +6,8 @@ metadata:
     app: prometheus
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: prometheus
@@ -15,7 +17,7 @@ spec:
         app: prometheus
     spec:
       imagePullSecrets:
-        - name: docr-secret # ✅ CORRIGIDO - Nome correto do secret
+        - name: docr-secret
       containers:
         - name: prometheus
           image: registry.digitalocean.com/github-actions-prometheus-k8s-cronjobs/prometheus:latest
