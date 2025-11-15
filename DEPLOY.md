@@ -31,7 +31,7 @@ doctl registry create github-actions-prometheus-k8s-cronjobs
 
 ```bash
 doctl kubernetes cluster create github-actions-prometheus-k8s-cronjobs \
-  --region nyc1 \
+  --region nyc3 \
   --version latest \
   --node-pool "name=worker-pool;size=s-2vcpu-4gb;count=2;auto-scale=true;min-nodes=1;max-nodes=3"
 ```

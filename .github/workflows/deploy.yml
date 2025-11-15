@@ -104,7 +104,7 @@ jobs:
       
       - name: Configure kubectl with DOKS cluster
         run: |
-          doctl kubernetes cluster kubeconfig save ${{ secrets.DO_CLUSTER_NAME }}
+          doctl kubernetes cluster kubeconfig save ${{ vars.DO_CLUSTER_NAME }}
       
       - name: Create registry secret
         run: |

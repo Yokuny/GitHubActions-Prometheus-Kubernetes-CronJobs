@@ -236,14 +236,14 @@ doctl kubernetes options sizes
 
 # Create a Kubernetes cluster
 doctl kubernetes cluster create <cluster-name> \
-  --region nyc1 \
+  --region nyc3 \
   --node-pool "name=worker-pool;size=s-2vcpu-4gb;count=3" \
   --auto-upgrade=true \
   --maintenance-window "saturday=02:00"
 
 # Example:
 doctl kubernetes cluster create monitoring-poc-cluster \
-  --region nyc1 \
+  --region nyc3 \
   --node-pool "name=worker-pool;size=s-2vcpu-4gb;count=3"
 ```
 
