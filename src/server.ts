@@ -1,6 +1,6 @@
-import { createApp } from "./index.js";
-import { startCronJobs, stopCronJobs } from "./cron/jobs.js";
 import type { Server } from "node:http";
+import { startCronJobs, stopCronJobs } from "./cron/jobs.js";
+import { createApp } from "./index.js";
 
 // Get port from environment variable or use default
 const PORT = process.env.PORT || 8000;

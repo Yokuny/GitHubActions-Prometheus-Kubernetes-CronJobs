@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from "express";
+import { type NextFunction, type Request, type Response, Router } from "express";
 import { register } from "../config/prometheus.js";
 
 const router = Router();

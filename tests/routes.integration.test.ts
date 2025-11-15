@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import request from "supertest";
-import { createApp } from "../src/index.js";
 import type { Express } from "express";
+import request from "supertest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { createApp } from "../src/index.js";
 
 describe("Routes Integration Tests", () => {
   let app: Express;

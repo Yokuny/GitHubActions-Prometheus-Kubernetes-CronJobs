@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import express, { type Express } from "express";
 import request from "supertest";
-import { metricsMiddleware } from "../../src/middleware/metrics.middleware.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { httpRequestDuration, httpRequestsTotal, register } from "../../src/config/prometheus.js";
+import { metricsMiddleware } from "../../src/middleware/metrics.middleware.js";
 
 describe("Metrics Middleware", () => {
   let app: Express;
@@ -21,7 +21,7 @@ describe("Metrics Middleware", () => {
   describe("Request Duration Recording", () => {
     it("should record request duration to histogram", async () => {
       // Add a test route
-      app.get("/test", (req, res) => {
+      app.get("/test", (_req, res) => {
         res.status(200).json({ message: "test" });
       });
 
@@ -41,7 +41,7 @@ describe("Metrics Middleware", () => {
 
     it("should convert milliseconds to seconds correctly", async () => {
       // Add a test route with artificial delay
-      app.get("/slow", async (req, res) => {
+      app.get("/slow", async (_req, res) => {
         await new Promise((resolve) => setTimeout(resolve, 100)); // 100ms delay
         res.status(200).json({ message: "slow" });
       });
@@ -60,7 +60,7 @@ describe("Metrics Middleware", () => {
     });
 
     it("should handle fast responses", async () => {
-      app.get("/fast", (req, res) => {
+      app.get("/fast", (_req, res) => {
         res.status(200).json({ message: "fast" });
       });
 
@@ -78,7 +78,7 @@ describe("Metrics Middleware", () => {
 
   describe("Request Counter Increment", () => {
     it("should increment counter for requests", async () => {
-      app.get("/test", (req, res) => {
+      app.get("/test", (_req, res) => {
         res.status(200).json({ message: "test" });
       });
 
@@ -93,7 +93,7 @@ describe("Metrics Middleware", () => {
     });
 
     it("should increment counter exactly once per request", async () => {
-      app.get("/test", (req, res) => {
+      app.get("/test", (_req, res) => {
         res.status(200).json({ message: "test" });
       });
 
@@ -105,7 +105,7 @@ describe("Metrics Middleware", () => {
     });
 
     it("should increment counter for multiple requests", async () => {
-      app.get("/test", (req, res) => {
+      app.get("/test", (_req, res) => {
         res.status(200).json({ message: "test" });
       });
 
@@ -123,7 +123,7 @@ describe("Metrics Middleware", () => {
     it("should apply correct labels for GET method", async () => {
       const labelsSpy = vi.spyOn(httpRequestDuration, "labels");
 
-      app.get("/test", (req, res) => {
+      app.get("/test", (_req, res) => {
         res.status(200).json({ message: "test" });
       });
 
@@ -135,7 +135,7 @@ describe("Metrics Middleware", () => {
     it("should apply correct labels for POST method", async () => {
       const labelsSpy = vi.spyOn(httpRequestDuration, "labels");
 
-      app.post("/test", (req, res) => {
+      app.post("/test", (_req, res) => {
         res.status(201).json({ message: "created" });
       });
 
@@ -147,7 +147,7 @@ describe("Metrics Middleware", () => {
     it("should apply correct labels for different routes", async () => {
       const labelsSpy = vi.spyOn(httpRequestDuration, "labels");
 
-      app.get("/api/users", (req, res) => {
+      app.get("/api/users", (_req, res) => {
         res.status(200).json({ users: [] });
       });
 
@@ -163,6 +163,7 @@ describe("Metrics Middleware", () => {
       await request(app).get("/nonexistent");
 
       expect(labelsSpy).toHaveBeenCalled();
+      // biome-ignore lint/suspicious/noExplicitAny: mock calls type assertion needed for testing
       const calls = labelsSpy.mock.calls as any[];
       expect(calls.length).toBeGreaterThan(0);
       expect(calls[0][0]).toBe("GET");
@@ -172,7 +173,7 @@ describe("Metrics Middleware", () => {
     it("should apply correct labels for 500 status code", async () => {
       const labelsSpy = vi.spyOn(httpRequestDuration, "labels");
 
-      app.get("/error", (req, res) => {
+      app.get("/error", (_req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
       });
 
@@ -184,9 +185,9 @@ describe("Metrics Middleware", () => {
     it("should handle different status codes correctly", async () => {
       const labelsSpy = vi.spyOn(httpRequestsTotal, "labels");
 
-      app.get("/success", (req, res) => res.status(200).send("OK"));
-      app.get("/created", (req, res) => res.status(201).send("Created"));
-      app.get("/bad-request", (req, res) => res.status(400).send("Bad Request"));
+      app.get("/success", (_req, res) => res.status(200).send("OK"));
+      app.get("/created", (_req, res) => res.status(201).send("Created"));
+      app.get("/bad-request", (_req, res) => res.status(400).send("Bad Request"));
 
       await request(app).get("/success");
       await request(app).get("/created");
@@ -202,7 +203,7 @@ describe("Metrics Middleware", () => {
     it("should handle GET requests", async () => {
       const labelsSpy = vi.spyOn(httpRequestDuration, "labels");
 
-      app.get("/test", (req, res) => {
+      app.get("/test", (_req, res) => {
         res.status(200).json({ method: "GET" });
       });
 
@@ -214,7 +215,7 @@ describe("Metrics Middleware", () => {
     it("should handle POST requests", async () => {
       const labelsSpy = vi.spyOn(httpRequestDuration, "labels");
 
-      app.post("/test", (req, res) => {
+      app.post("/test", (_req, res) => {
         res.status(200).json({ method: "POST" });
       });
 
@@ -226,7 +227,7 @@ describe("Metrics Middleware", () => {
     it("should handle PUT requests", async () => {
       const labelsSpy = vi.spyOn(httpRequestDuration, "labels");
 
-      app.put("/test", (req, res) => {
+      app.put("/test", (_req, res) => {
         res.status(200).json({ method: "PUT" });
       });
 
@@ -238,7 +239,7 @@ describe("Metrics Middleware", () => {
     it("should handle DELETE requests", async () => {
       const labelsSpy = vi.spyOn(httpRequestDuration, "labels");
 
-      app.delete("/test", (req, res) => {
+      app.delete("/test", (_req, res) => {
         res.status(200).json({ method: "DELETE" });
       });
 

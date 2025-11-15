@@ -1,9 +1,9 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { type Request, type Response, type NextFunction } from "express";
 import { metricsMiddleware } from "./middleware/metrics.middleware.js";
 import fastRoute from "./routes/fast.route.js";
-import slowRoute from "./routes/slow.route.js";
 import healthRoute from "./routes/health.route.js";
 import metricsRoute from "./routes/metrics.route.js";
+import slowRoute from "./routes/slow.route.js";
 
 /**
  * Create and configure Express application
