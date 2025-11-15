@@ -130,7 +130,7 @@ Edit `.env` with your local configuration:
 
 ```bash
 NODE_ENV=development
-PORT=3000
+PORT=8000
 LOG_LEVEL=debug
 ```
 
@@ -146,9 +146,9 @@ pnpm start
 ```
 
 The application will be available at:
-- Backend: http://localhost:3000
-- Health Check: http://localhost:3000/health
-- Metrics: http://localhost:3000/metrics
+- Backend: http://localhost:8000
+- Health Check: http://localhost:8000/health
+- Metrics: http://localhost:8000/metrics
 
 ### 5. Run with Docker Compose
 
@@ -167,7 +167,7 @@ docker-compose down
 ```
 
 Services will be available at:
-- Backend: http://localhost:3000
+- Backend: http://localhost:8000
 - Prometheus: http://localhost:9090
 
 ### 6. Code Quality
@@ -356,14 +356,14 @@ kubectl get services
 
 ```bash
 # Port forward backend service
-kubectl port-forward svc/backend-service 3000:3000
+kubectl port-forward svc/backend-service 8000:8000
 
 # Port forward Prometheus service (in another terminal)
 kubectl port-forward svc/prometheus-service 9090:9090
 ```
 
 Access:
-- Backend: http://localhost:3000
+- Backend: http://localhost:8000
 - Prometheus: http://localhost:9090
 
 ### Deploy to DigitalOcean Kubernetes (DOKS)
@@ -421,7 +421,7 @@ kubectl get svc prometheus-service
 For backend service (ClusterIP), use port forwarding or create an Ingress:
 
 ```bash
-kubectl port-forward svc/backend-service 3000:3000
+kubectl port-forward svc/backend-service 8000:8000
 ```
 
 ### Automated Deployment via GitHub Actions
@@ -628,8 +628,8 @@ For advanced dashboards, consider integrating Grafana.
 #### Port Already in Use
 
 ```bash
-# Find process using port 3000
-lsof -i :3000
+# Find process using port 8000
+lsof -i :8000
 
 # Kill the process
 kill -9 <PID>
@@ -800,7 +800,7 @@ kubectl logs <backend-pod-name>
 # Verify backend-service is reachable from Prometheus pod
 
 # Test connectivity
-kubectl exec -it <prometheus-pod> -- wget -O- http://backend-service:3000/metrics
+kubectl exec -it <prometheus-pod> -- wget -O- http://backend-service:8000/metrics
 ```
 
 #### Cron Jobs Not Running
@@ -810,7 +810,7 @@ kubectl exec -it <prometheus-pod> -- wget -O- http://backend-service:3000/metric
 kubectl logs <backend-pod-name>
 
 # Verify cron schedule is correct
-# Check if HTTP client can reach localhost:3000
+# Check if HTTP client can reach localhost:8000
 ```
 
 ### Performance Issues

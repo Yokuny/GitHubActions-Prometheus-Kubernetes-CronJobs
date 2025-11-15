@@ -3,7 +3,7 @@ import { startCronJobs, stopCronJobs } from "./cron/jobs.js";
 import type { Server } from "node:http";
 
 // Get port from environment variable or use default
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 const NODE_ENV = process.env.NODE_ENV || "development";
 
 // Create Express application
@@ -62,7 +62,7 @@ const gracefulShutdown = (signal: string): void => {
     setTimeout(() => {
       console.error("⚠️  Graceful shutdown timeout - Forcing exit");
       process.exit(1);
-    }, 30000);
+    }, 8000);
   } else {
     console.log("⚠️  Server was not running");
     process.exit(0);

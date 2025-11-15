@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: prometheus
-        image: registry.digitalocean.com/YOUR_REGISTRY/prometheus:latest
+        image: registry.digitalocean.com/github-actions-prometheus-k8s-cronjobs/prometheus:latest
         ports:
         - containerPort: 9090
           name: http

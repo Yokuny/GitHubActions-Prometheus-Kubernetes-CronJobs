@@ -7,7 +7,7 @@ let slowCronJob: cron.ScheduledTask | null = null;
 // Get the base URL for making HTTP requests
 // In production, this will be the service's own URL
 const getBaseUrl = (): string => {
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 8000;
   return `http://localhost:${port}`;
 };
 

@@ -37,7 +37,7 @@ RUN pnpm install --frozen-lockfile --prod
 COPY --from=builder /app/dist ./dist
 
 # Expose application port
-EXPOSE 3000
+EXPOSE 8000
 
 # Set NODE_ENV to production
 ENV NODE_ENV=production

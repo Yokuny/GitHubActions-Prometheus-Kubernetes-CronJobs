@@ -16,16 +16,16 @@ spec:
     spec:
       containers:
       - name: backend
-        image: registry.digitalocean.com/YOUR_REGISTRY_NAME/backend:latest
+        image: registry.digitalocean.com/github-actions-prometheus-k8s-cronjobs/backend:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 8000
           name: http
           protocol: TCP
         env:
         - name: NODE_ENV
           value: "production"
         - name: PORT
-          value: "3000"
+          value: "8000"
         resources:
           requests:
             memory: "256Mi"
@@ -36,7 +36,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /health
-            port: 3000
+            port: 8000
             scheme: HTTP
           initialDelaySeconds: 30
           periodSeconds: 10
@@ -46,7 +46,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /health
-            port: 3000
+            port: 8000
             scheme: HTTP
           initialDelaySeconds: 5
           periodSeconds: 5

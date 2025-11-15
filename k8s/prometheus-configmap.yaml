@@ -11,5 +11,5 @@ data:
     scrape_configs:
       - job_name: 'backend'
         static_configs:
-          - targets: ['backend-service:3000']
+          - targets: ['backend-service:8000']
         metrics_path: '/metrics'
