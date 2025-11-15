@@ -1,0 +1,48 @@
+{
+  "name": "prometheus-k8s-monitoring-poc",
+  "version": "1.0.0",
+  "description": "POC for monitoring using Node.js, Express, Prometheus, and Kubernetes",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "vitest --run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "prometheus",
+    "kubernetes",
+    "monitoring",
+    "express",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "prom-client": "^15.1.0",
+    "response-time": "^2.3.2",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.5",
+    "@types/node-cron": "^3.0.11",
+    "@types/response-time": "^2.3.8",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^6.3.4",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
