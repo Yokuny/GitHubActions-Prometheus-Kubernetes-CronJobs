@@ -1,4 +1,4 @@
-import type { Request, Response, RequestHandler } from "express";
+import type { Request, RequestHandler, Response } from "express";
 import responseTime from "response-time";
 import { httpRequestDuration, httpRequestsTotal } from "../config/prometheus.js";
 

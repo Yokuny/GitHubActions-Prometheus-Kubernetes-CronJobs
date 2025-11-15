@@ -1,4 +1,4 @@
-import { type NextFunction, type Request, type Response, Router, type IRouter } from "express";
+import { type IRouter, type NextFunction, type Request, type Response, Router } from "express";
 
 const router: IRouter = Router();
 
