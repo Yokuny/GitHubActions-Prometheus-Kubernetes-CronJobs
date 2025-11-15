@@ -14,6 +14,8 @@ spec:
       labels:
         app: prometheus
     spec:
+      imagePullSecrets:
+      - name: docr-secret
       containers:
       - name: prometheus
         image: registry.digitalocean.com/github-actions-prometheus-k8s-cronjobs/prometheus:latest

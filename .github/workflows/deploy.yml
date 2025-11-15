@@ -106,6 +106,19 @@ jobs:
         run: |
           doctl kubernetes cluster kubeconfig save ${{ secrets.DO_CLUSTER_NAME }}
       
+      - name: Create registry secret
+        run: |
+          kubectl create secret docker-registry docr-secret \
+            --docker-server=${{ env.REGISTRY }} \
+            --docker-username=${{ secrets.DOCR_TOKEN }} \
+            --docker-password=${{ secrets.DOCR_TOKEN }} \
+            --dry-run=client -o yaml | kubectl apply -f -
+      
+      - name: Delete old failed pods
+        run: |
+          kubectl delete pods -l app=backend --field-selector status.phase=Failed || true
+          kubectl delete pods -l app=prometheus --field-selector status.phase=Failed || true
+      
       - name: Update backend deployment image tag
         run: |
           sed -i "s|image:.*/${{ env.IMAGE_NAME }}:.*|image: ${{ env.REGISTRY }}/${{ secrets.DO_REGISTRY_NAME }}/${{ env.IMAGE_NAME }}:${{ needs.docker.outputs.image_tag }}|g" k8s/backend-deployment.yaml
