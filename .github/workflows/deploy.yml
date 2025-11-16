@@ -133,12 +133,37 @@ jobs:
       - name: Verify secret creation
         run: |
           echo "=== Checking if secret exists ==="
-          kubectl get secret docr-secret -o yaml
+          kubectl get secret docr-secret
 
-      - name: Delete old failed pods
+      - name: Clean up prometheus before deploy
         run: |
+          echo "=== Current prometheus state ==="
+          kubectl get pods -l app=prometheus -o wide || true
+          kubectl get rs -l app=prometheus || true
+          echo ""
+
+          echo "=== Force deleting ALL prometheus pods to release PVC ==="
+          kubectl delete pods -l app=prometheus --grace-period=0 --force || true
+
+          echo "=== Deleting prometheus deployment to force clean slate ==="
+          kubectl delete deployment prometheus || true
+
+          echo "=== Cleaning up old ReplicaSets ==="
+          kubectl delete rs -l app=prometheus || true
+
+          echo "=== Waiting 15 seconds for complete cleanup and PVC release ==="
+          sleep 15
+
+          echo "=== Verifying PVC is released ==="
+          kubectl get pvc prometheus-pvc
+
+          echo "=== Verification: No prometheus resources should exist ==="
+          kubectl get all -l app=prometheus || echo "✅ Clean slate achieved"
+
+      - name: Delete old failed backend pods
+        run: |
+          echo "=== Deleting failed backend pods ==="
           kubectl delete pods -l app=backend --field-selector status.phase=Failed || true
-          kubectl delete pods -l app=prometheus --field-selector status.phase=Failed || true
 
       - name: Update backend deployment image tag
         run: |
@@ -161,17 +186,15 @@ jobs:
 
       - name: Wait and check pod status
         run: |
-          echo "=== Waiting 10 seconds for pods to start ==="
-          sleep 10
+          echo "=== Waiting 20 seconds for pods to start ==="
+          sleep 20
           echo ""
           echo "=== Current pods status ==="
           kubectl get pods -l app=backend -o wide
           kubectl get pods -l app=prometheus -o wide
           echo ""
-          echo "=== Checking for ImagePullBackOff errors ==="
-          kubectl get pods -l app=backend -o jsonpath='{.items[*].status.containerStatuses[*].state}'
-          echo ""
-          kubectl get pods -l app=prometheus -o jsonpath='{.items[*].status.containerStatuses[*].state}'
+          echo "=== Checking pod states ==="
+          kubectl describe pods -l app=prometheus | grep -A 10 "Events:" || true
 
       - name: Verify backend deployment rollout
         run: |
@@ -181,7 +204,14 @@ jobs:
       - name: Verify prometheus deployment rollout
         run: |
           echo "=== Waiting for prometheus deployment ==="
-          kubectl rollout status deployment/prometheus --timeout=5m
+          echo "=== PVC Status ==="
+          kubectl get pvc prometheus-pvc
+          echo ""
+          echo "=== Current prometheus pods ==="
+          kubectl get pods -l app=prometheus -o wide
+          echo ""
+          echo "=== Starting rollout check (10 minute timeout) ==="
+          kubectl rollout status deployment/prometheus --timeout=10m
 
       - name: Get deployment status
         if: always()
@@ -195,8 +225,11 @@ jobs:
           echo "=== Services ==="
           kubectl get services
           echo ""
+          echo "=== PVCs ==="
+          kubectl get pvc
+          echo ""
           echo "=== Recent Events ==="
-          kubectl get events --sort-by='.lastTimestamp' | tail -30
+          kubectl get events --sort-by='.lastTimestamp' | tail -50
 
       - name: Debug pod logs on failure
         if: failure()
@@ -212,3 +245,6 @@ jobs:
           echo ""
           echo "=== Prometheus Pod Logs ==="
           kubectl logs -l app=prometheus --tail=100 --all-containers=true || echo "No prometheus logs available"
+          echo ""
+          echo "=== PVC Status ==="
+          kubectl describe pvc prometheus-pvc
