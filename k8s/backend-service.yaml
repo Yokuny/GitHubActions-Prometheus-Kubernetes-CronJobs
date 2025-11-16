@@ -5,11 +5,11 @@ metadata:
   labels:
     app: backend
 spec:
-  type: ClusterIP
+  type: LoadBalancer  # ✅ Expõe o backend publicamente
   selector:
     app: backend
   ports:
-  - protocol: TCP
-    port: 8000
-    targetPort: 8000
-    name: http
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      name: http
